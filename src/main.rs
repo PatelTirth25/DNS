@@ -27,8 +27,13 @@ fn main() {
                 // Process the request (parse and build response)
                 let response = handle_request(&dns_query);
 
+                let mut jnd = 511;
+                while response[jnd] == 0 {
+                    jnd -= 1;
+                }
+
                 // Send the processed response back to the client
-                socket.send_to(&response, src).unwrap();
+                socket.send_to(&response[0..=jnd], src).unwrap();
                 println!("Response sent to {}", src);
             }
             Err(e) => eprintln!("Failed to receive request: {:?}", e),

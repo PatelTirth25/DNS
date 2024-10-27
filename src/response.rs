@@ -104,7 +104,7 @@ impl Response {
                     let mut response: Vec<u8> = Vec::new();
 
                     // Add the bytes in the appropriate order
-                    response.extend_from_slice(name_bytes); // Name
+                    response.extend_from_slice(&[0xC0, 0x0C]); // Name
                     response.extend_from_slice(&qtype_bytes); // Qtype
                     response.extend_from_slice(&class_bytes); // Class
                     response.extend_from_slice(&ttl_bytes); // TTL
@@ -128,7 +128,7 @@ fn getanswers(ques: Question) -> Vec<Answer> {
 
     if b.len() > 0 {
         ans.push(Answer::A {
-            name: (ques.name.clone()),
+            name: ques.name.clone(),
             qtype: (1),
             class: (1),
             ttl: (200),
