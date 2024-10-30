@@ -60,7 +60,7 @@ impl Header {
             rd: rd == 1,
             ra: ra == 1,
             z: z == 0,
-            rcode: ResultCode::from_num(rcode),
+            rcode: ResultCode::from_num(rcode.try_into().unwrap()),
             qdcount: questions,
             ancount: answer_rrs,
             nscount: authority_rrs,

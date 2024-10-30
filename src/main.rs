@@ -1,14 +1,13 @@
+use std::collections::HashMap;
 use std::net::UdpSocket;
 use std::time::Duration;
 
-mod header;
-use header::Header;
+mod packet;
+use packet::header::Header;
 
-mod domain;
 mod response;
 
-mod question;
-use question::Question;
+use packet::question::Question;
 use response::Response;
 
 fn main() {
@@ -40,6 +39,7 @@ fn main() {
         }
     }
 
+    // Example
     // dns_query[0..29].copy_from_slice(&[
     //     0x12, 0x34, // Transaction ID
     //     0x01, 0x00, // Flags
@@ -63,9 +63,11 @@ fn handle_request(dns_query: &[u8; 512]) -> [u8; 512] {
     println!("{:#?}", header);
     println!("{:#?}", question);
 
-    let mut res: Response = Response { ansbuf: [0; 512] };
-    res.new(question, *dns_query);
-    println!("Answer Buffer: {:?}", res.ansbuf);
+    let mut res: Response = Response {
+        ansbuf: [0; 512],
+        compressname: HashMap::new(),
+    };
+    res.resolve(question, *dns_query);
 
     res.ansbuf
 }

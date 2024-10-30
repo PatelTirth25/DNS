@@ -1,11 +1,37 @@
 use std::usize;
 
+#[derive(Debug)]
+pub enum Qtype {
+    A,
+    CNAME,
+    UNKNOWN,
+}
+
+#[allow(dead_code)]
+impl Qtype {
+    pub fn from_num(n: u16) -> Qtype {
+        match n {
+            1 => Qtype::A,
+            5 => Qtype::CNAME,
+            _ => Qtype::UNKNOWN,
+        }
+    }
+
+    pub fn to_num(self) -> u16 {
+        match self {
+            Qtype::A => 1,
+            Qtype::CNAME => 5,
+            Qtype::UNKNOWN => 0,
+        }
+    }
+}
+
 #[allow(unused_variables)]
 #[allow(dead_code)]
 #[derive(Debug)]
 pub struct Question {
     pub name: String,
-    pub qtype: u16,
+    pub qtype: Qtype,
     pub qclass: u16,
 }
 
@@ -72,11 +98,13 @@ impl Question {
         start += 1;
 
         // Safely extract the qtype and qclass, handling potential out-of-bounds access
-        let qtype = if start + 2 <= quesslice.len() {
+        let num = if start + 2 <= quesslice.len() {
             u16::from_be_bytes(quesslice[start..start + 2].try_into().unwrap())
         } else {
             0 // Invalid case, should handle this more gracefully
         };
+
+        let qtype: Qtype = Qtype::from_num(num);
 
         start += 2;
 

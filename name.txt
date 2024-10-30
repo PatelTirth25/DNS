@@ -1,0 +1,3 @@
+example.com;A;1.2.3.4,
+example.com;CNAME;example.net,
+example.net;A;1.8.1.6,
